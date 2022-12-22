@@ -8,7 +8,7 @@ from datetime import datetime, timezone, timedelta
 app = Flask(__name__)
 
 @app.route("/webhook", methods=["POST"])
-def webhook3():
+def webhook():
     req = request.get_json(force=True)
     action =  req.get("queryResult").get("action")
     if (action == "dramaC"):
