@@ -8,8 +8,8 @@ from datetime import datetime, timezone, timedelta
 app = Flask(__name__)
 
 @app.route("/webhook", methods=["POST"])
-def webhook():
-    rate = request.get_json()['queryResult']['parameters']['movieC']
+def handle_webhook():
+    rate = request.get_json()['queryResult']['parameters']['movie']
     db = firestore.client()
     response_text = "您選擇的電影分類是：" + rate + "，相關電影："
     if rate == "全部電影":
