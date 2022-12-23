@@ -21,6 +21,24 @@ def handle_webhook():
     movies = list(query)
     for movie in movies:
         response_text += "\n片名：" + movie.get("text") + "\n介紹：" + movie.get("link")
+
+    if rate == "全部戲劇":
+        dramas_collection = db.collection("最新劇集_全部")
+        query = dramas_collection.stream()
+    elif rate in ["韓劇", "美劇", "日劇", "陸劇", "港劇", "台劇", "海外劇"]:
+        dramas_collection = db.collection("最新劇集_分類")
+        query = dramas_collection.where("rate", "==", rate).stream()
+    dramas = list(query)
+    for drama in dramas:
+        response_text += "\n片名：" + drama.get("text") + "\n介紹：" + drama.get("link")
+
+    if rate == "全部動漫":
+        cartoons_collection = db.collection("最新動漫_全部")
+        query = cartoons_collection.stream()
+    cartoons = list(query)
+    for cartoon in cartoons:
+        response_text += "\n片名：" + cartoon.get("text") + "\n介紹：" + cartoon.get("link")
+
     return make_response(jsonify({
         "fulfillmentText": response_text
     }))
