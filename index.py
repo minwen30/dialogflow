@@ -22,7 +22,7 @@ def handle_webhook():
     for movie in movies:
         response_text += "\n片名：" + movie.get("text") + "\n介紹：" + movie.get("link")
 
-    rate = request.get_json()['queryResult']['parameters']['drama']
+   """ rate = request.get_json()['queryResult']['parameters']['drama']
     db = firestore.client()
     response_text = "您選擇的戲劇分類是：" + rate + "，相關戲劇："
     if rate == "全部戲劇":
@@ -43,7 +43,7 @@ def handle_webhook():
         query = cartoons_collection.stream()
     cartoons = list(query)
     for cartoon in cartoons:
-        response_text += "\n片名：" + cartoon.get("text") + "\n介紹：" + cartoon.get("link")
+        response_text += "\n片名：" + cartoon.get("text") + "\n介紹：" + cartoon.get("link")"""
 
     return make_response(jsonify({
         "fulfillmentText": response_text
