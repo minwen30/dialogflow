@@ -11,8 +11,8 @@ app = Flask(__name__)
 def webhook():
     req = request.get_json(force=True)
     action =  req.get("queryResult").get("action")
-    if (action == "dramaC"):
-        rate =  req.get("queryResult").get("parameters").get("rate")
+    """if (action == "dramaC"):
+        rate =  req.get("queryResult").get("parameters").get("drama")
         info = "您選擇的戲劇分類是：" + rate + "，相關戲劇：\n"
         collection_ref = db.collection("最新劇集_全部")
         docs = collection_ref.get()
@@ -23,9 +23,9 @@ def webhook():
                 result += "片名：" + dict["text"] + "\n"
                 result += "分類：" + dict["rate"] + "\n\n"
                 result += "介紹網址：" + dict["link"] + "\n\n\n"
-        info += result
+        info += result"""
     if (action == "dramaC"):
-        rate =  req.get("queryResult").get("parameters").get("rate")
+        rate =  req.get("queryResult").get("parameters").get("drama")
         info = "您選擇的戲劇分類是：" + rate + "，相關戲劇：\n"
         collection_ref = db.collection("最新劇集_分類")
         docs = collection_ref.get()
@@ -37,8 +37,8 @@ def webhook():
                 result += "分類：" + dict["rate"] + "\n\n"
                 result += "介紹網址：" + dict["link"] + "\n\n\n"
         info += result
-    if (action == "movieC"):
-        rate =  req.get("queryResult").get("parameters").get("rate")
+    """if (action == "movieC"):
+        rate =  req.get("queryResult").get("parameters").get("movie")
         info = "您選擇的電影分類是：" + rate + "，相關電影：\n"
         collection_ref = db.collection("最新電影_全部")
         docs = collection_ref.get()
@@ -49,9 +49,9 @@ def webhook():
                 result += "片名：" + dict["text"] + "\n"
                 result += "分類：" + dict["rate"] + "\n\n"
                 result += "介紹網址：" + dict["link"] + "\n\n\n"
-        info += result
+        info += result"""
     if (action == "movieC"):
-        rate =  req.get("queryResult").get("parameters").get("rate")
+        rate =  req.get("queryResult").get("parameters").get("movie")
         info = "您選擇的電影分類是：" + rate + "，相關電影：\n"
         collection_ref = db.collection("最新電影_分類")
         docs = collection_ref.get()
@@ -64,7 +64,7 @@ def webhook():
                 result += "介紹網址：" + dict["link"] + "\n\n\n"
         info += result
     if (action == "cartoonC"):
-        rate =  req.get("queryResult").get("parameters").get("rate")
+        rate =  req.get("queryResult").get("parameters").get("cartoon")
         info = "您選擇的動漫分類是：" + rate + "，相關動漫：\n"
         collection_ref = db.collection("最新動漫_全部")
         docs = collection_ref.get()
