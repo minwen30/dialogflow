@@ -9,22 +9,23 @@ app = Flask(__name__)
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    req = request.get_json(force=True)
-    action =  req.get("queryResult").get("action")
+    rate = request.get_json()['queryResult']['parameters']['movieC']
+    db = firestore.client()
+    response_text = "您選擇的電影分類是：" + rate + "，相關電影："
+    if rate == "全部電影":
+        movies_collection = db.collection("最新電影_全部")
+        query = movies_collection.stream()
+    elif rate in ["動作片", "喜劇片", "愛情片", "科幻片", "恐怖片", "劇情片", "戰爭片", "紀錄片"]:
+        movies_collection = db.collection("最新電影_分類")
+        query = movies_collection.where("rate", "==", rate).stream()
+    movies = list(query)
+    for movie in movies:
+        response_text += "\n片名：" + movie.get("text") + "\n介紹：" + movie.get("link")
+    return make_response(jsonify({
+        "fulfillmentText": response_text
+    }))
+
     """if (action == "dramaC"):
-        rate =  req.get("queryResult").get("parameters").get("drama")
-        info = "您選擇的戲劇分類是：" + rate + "，相關戲劇：\n"
-        collection_ref = db.collection("最新劇集_全部")
-        docs = collection_ref.get()
-        result = ""
-        for doc in docs:
-            dict = doc.to_dict()
-            if rate in dict["rate"]:
-                result += "片名：" + dict["text"] + "\n"
-                result += "分類：" + dict["rate"] + "\n\n"
-                result += "介紹網址：" + dict["link"] + "\n\n\n"
-        info += result"""
-    if (action == "dramaC"):
         rate =  req.get("queryResult").get("parameters").get("drama")
         info = "您選擇的戲劇分類是：" + rate + "，相關戲劇：\n"
         collection_ref = db.collection("最新劇集_分類")
@@ -37,19 +38,6 @@ def webhook():
                 result += "分類：" + dict["rate"] + "\n\n"
                 result += "介紹網址：" + dict["link"] + "\n\n\n"
         info += result
-    """if (action == "movieC"):
-        rate =  req.get("queryResult").get("parameters").get("movie")
-        info = "您選擇的電影分類是：" + rate + "，相關電影：\n"
-        collection_ref = db.collection("最新電影_全部")
-        docs = collection_ref.get()
-        result = ""
-        for doc in docs:
-            dict = doc.to_dict()
-            if rate in dict["rate"]:
-                result += "片名：" + dict["text"] + "\n"
-                result += "分類：" + dict["rate"] + "\n\n"
-                result += "介紹網址：" + dict["link"] + "\n\n\n"
-        info += result"""
     if (action == "movieC"):
         rate =  req.get("queryResult").get("parameters").get("movie")
         info = "您選擇的電影分類是：" + rate + "，相關電影：\n"
@@ -74,21 +62,7 @@ def webhook():
             if rate in dict["rate"]:
                 result += "片名：" + dict["text"] + "\n"
                 result += "分類：" + dict["rate"] + "\n\n"
-        info += result
-
-    elif (action == "CityWeather"):
-        city =  req.get("queryResult").get("parameters").get("city")
-        token = "rdec-key-123-45678-011121314"
-        url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=" + token + "&format=JSON&locationName=" + str(city)
-        Data = requests.get(url)
-        Weather = json.loads(Data.text)["records"]["location"][0]["weatherElement"][0]["time"][0]["parameter"]["parameterName"]
-        Rain = json.loads(Data.text)["records"]["location"][0]["weatherElement"][1]["time"][0]["parameter"]["parameterName"]
-        MinT = json.loads(Data.text)["records"]["location"][0]["weatherElement"][2]["time"][0]["parameter"]["parameterName"]
-        MaxT = json.loads(Data.text)["records"]["location"][0]["weatherElement"][4]["time"][0]["parameter"]["parameterName"]
-        info = city + "的天氣是" + Weather + "，降雨機率：" + Rain + "%"
-        info += "，溫度：" + MinT + "-" + MaxT + "度"
-
-    return make_response(jsonify({"fulfillmentText": info}))
+        info += result"""
 
 #if __name__ == "__main__":
 #    app.run()
