@@ -22,6 +22,9 @@ def handle_webhook():
     for movie in movies:
         response_text += "\n片名：" + movie.get("text") + "\n介紹：" + movie.get("link")
 
+    rate = request.get_json()['queryResult']['parameters']['drama']
+    db = firestore.client()
+    response_text = "您選擇的戲劇分類是：" + rate + "，相關戲劇："
     if rate == "全部戲劇":
         dramas_collection = db.collection("最新劇集_全部")
         query = dramas_collection.stream()
@@ -32,6 +35,9 @@ def handle_webhook():
     for drama in dramas:
         response_text += "\n片名：" + drama.get("text") + "\n介紹：" + drama.get("link")
 
+    rate = request.get_json()['queryResult']['parameters']['cartoon']
+    db = firestore.client()
+    response_text = "您選擇的動漫是：" + rate + "，相關動漫："
     if rate == "全部動漫":
         cartoons_collection = db.collection("最新動漫_全部")
         query = cartoons_collection.stream()
